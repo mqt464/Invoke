@@ -1,0 +1,57 @@
+---
+title: Dmenu CLI
+description: Use Invoke.App as graphical dmenu session through Invoke.Cli.
+sidebar_position: 9
+---
+
+# Dmenu CLI
+
+Invoke ships `Invoke.Cli` with `dmenu` command.
+
+## Basic use
+
+```powershell
+"alpha`nbeta`ngamma" | .\src\Invoke.Cli\bin\Debug\net10.0-windows\Invoke.Cli.exe dmenu -filter be
+```
+
+Custom separator:
+
+```powershell
+"alpha|beta|gamma" | .\src\Invoke.Cli\bin\Debug\net10.0-windows\Invoke.Cli.exe dmenu -sep "|" -dump
+```
+
+## Supported flags
+
+- `-i`
+- `-p`
+- `-mesg`
+- `-window-title`
+- `-l`
+- `-a`
+- `-u`
+- `-selected-row`
+- `-select`
+- `-format`
+- `-sep`
+- `-dump`
+- `-markup-rows`
+- `-only-match`
+- `-no-custom`
+- `-filter`
+- `-sync`
+
+## What happens under hood
+
+1. CLI reads stdin entries.
+2. It writes temp session JSON.
+3. It launches `Invoke.App.exe --dmenu-session <path>`.
+4. App runs in single `dmenu` mode.
+5. Selected value writes back to temp output file.
+6. CLI prints final selection to stdout.
+
+## Good fit
+
+- script pickers
+- project choosers
+- custom shell workflows on Windows
+- replacing rough console prompts with searchable UI

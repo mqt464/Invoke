@@ -1,0 +1,76 @@
+---
+title: Architecture
+description: High-level map of app, core, CLI, and runtime responsibilities.
+sidebar_position: 10
+---
+
+# Architecture
+
+Repo split:
+
+## `src/Invoke.App`
+
+WPF desktop app.
+
+Responsibilities:
+
+- tray icon and menu
+- startup registration
+- global hotkeys
+- launcher window and animations
+- icon loading
+- config watcher and runtime reload
+- rich script background process host
+
+## `src/Invoke.Core`
+
+Shared runtime logic.
+
+Responsibilities:
+
+- config model and `.rasi` parsing
+- theme loading and overlay application
+- launcher mode abstraction
+- built-in mode implementations
+- scoring and recent-launch boost
+- rich script manifest parsing
+- `dmenu` session model
+
+## `src/Invoke.Cli`
+
+CLI entrypoint for `dmenu` compatibility.
+
+## Search flow
+
+1. App loads config and theme.
+2. App builds `LauncherModeRegistry`.
+3. Query goes to active mode.
+4. `combi` fans query across configured providers.
+5. Always-evaluated script modes can also add rows.
+6. Results get scored, templated, and rendered.
+7. Selected action runs and may update recent-launch history.
+
+## Live reload flow
+
+App watches:
+
+- `config.rasi`
+- `themes\*.rasi`
+- script manifests and script files
+
+On change, it:
+
+1. reloads settings
+2. reloads theme
+3. rebuilds mode registry
+4. restarts background script hosts
+5. rebinds hotkeys
+6. refreshes visible launcher
+
+## Design choices
+
+- native Windows desktop stack
+- config-first over settings UI
+- extension model based on external processes
+- Everything integration instead of custom file indexer
+- rofi-like theme language for fast experimentation

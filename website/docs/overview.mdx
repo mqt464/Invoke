@@ -1,0 +1,99 @@
+---
+id: overview
+slug: /overview
+title: What Invoke Is
+description: Keyboard-first Windows launcher for apps, commands, files, windows, and custom scripts.
+sidebar_position: 1
+---
+
+# Invoke
+
+Invoke is keyboard-first launcher for Windows built with WPF on `.NET 10`.
+
+It opens fast, stays out of way, and turns one search box into front end for:
+
+- installed apps and shortcuts
+- commands on `PATH`
+- files and folders via Everything
+- open window switching
+- custom script-powered actions
+- `dmenu`-style selection flows
+
+## Good fit
+
+Use Invoke if you want:
+
+- one launcher for apps, files, commands, and windows
+- plain-text config under `%AppData%\Invoke`
+- rofi-style `.rasi` themes on Windows
+- scriptable extensions without rebuilding app
+- lightweight `dmenu` compatibility for local tools
+
+## Core ideas
+
+### Modes
+
+Invoke search runs through modes. Built-in modes:
+
+- `drun`: installed apps, Start Menu shortcuts, Windows app entries
+- `run`: raw commands and executables on `PATH`
+- `files`: file and folder search through `es.exe`
+- `window`: switch to already-open windows
+- `combi`: merged results from multiple modes
+
+Rich scripts can add more modes on top.
+
+### Config-first
+
+First launch seeds:
+
+```text
+%AppData%\Invoke\
+  config.rasi
+  themes\
+    default.rasi
+  scripts\
+    order.txt
+```
+
+Most behavior lives there:
+
+- launcher mode order
+- theme choice
+- hotkeys
+- search tuning
+- display labels
+- mode-specific templates
+- script loading and order
+
+### Scriptable
+
+Invoke rich scripts let you expose custom result lists from PowerShell, batch files, or executables. Scripts can:
+
+- react to trigger prefixes like `/clip` or `!yt`
+- stay alive as persistent sessions
+- run background helper processes
+- return structured actions like open URL, open path, copy text, or set query
+
+### Themeable
+
+Themes use `.rasi` files inspired by rofi. Invoke maps widget blocks like `window`, `inputbar`, `listview`, `element`, and `element selected` into live WPF styling.
+
+## Real use cases
+
+- Launch desktop apps without touching mouse
+- Jump into project folders from Everything
+- Switch windows when many apps open
+- Front-end your package manager or notes scripts
+- Build browser bangs, clipboard tools, project switchers, or docs lookups
+- Use Invoke as graphical `dmenu` for scripts that need selection UI
+
+## What makes repo interesting
+
+- Windows-native launcher UX, not Electron
+- Config and theme model tested from source
+- Script mode contract designed around JSON input/output
+- Live reload for config, theme, and script changes
+- Tray controls for startup, suspend hotkey, reload, and config access
+
+Next: start with [Install and run](/docs/getting-started/install-and-run) or jump to [Modes](/docs/usage/modes).

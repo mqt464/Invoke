@@ -1,0 +1,104 @@
+---
+title: Modes
+description: Built-in search providers and how combi mode merges them.
+sidebar_position: 4
+---
+
+# Modes
+
+Invoke centers around launcher modes. Active mode controls where query goes.
+
+## `drun`
+
+Searches:
+
+- Start Menu shortcuts
+- common Start Menu shortcuts
+- `LocalApplicationData\Microsoft\WindowsApps`
+- shell app entries from `shell:AppsFolder`
+
+Best for:
+
+- launching installed applications
+- app-centric daily use
+
+Behavior:
+
+- cached for 30 seconds
+- boosts recently launched apps through history scoring
+
+## `run`
+
+Searches executables on `PATH` and also offers direct command execution.
+
+If query not empty, Invoke inserts high-score action:
+
+```text
+Run <query>
+```
+
+That executes:
+
+```powershell
+cmd.exe /c <query>
+```
+
+Best for:
+
+- shell commands
+- tools already on `PATH`
+- quick one-off terminal launches
+
+## `files`
+
+Uses `es.exe` from Everything to search file system.
+
+Notes:
+
+- requires at least 2 query characters
+- returns files and folders
+- opens selected path directly
+- can start Everything automatically if IPC missing
+
+Best for:
+
+- jumping into project folders
+- opening recent documents by name
+- fast machine-wide file lookup
+
+## `window`
+
+Enumerates visible windows and switches focus to selected one.
+
+Search matches against:
+
+- window title
+- process name
+
+Best for:
+
+- multitasking
+- quick app switching without `Alt+Tab`
+
+## `combi`
+
+Aggregates results from configured providers.
+
+Control it with:
+
+- `combi-modes`
+- `combi-score-boosts`
+- `max-results-per-mode`
+
+Use combi when you want one default search box for everything.
+
+## Script modes
+
+Every rich script becomes mode definition with its own:
+
+- `id`
+- display name
+- priority
+- trigger behavior
+
+Script modes always evaluate alongside built-in mode search, so trigger prefixes like `/clip` or `!yt` can work from normal launcher flow.

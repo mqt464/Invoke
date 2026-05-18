@@ -1,0 +1,6 @@
+id = "winget-plus"
+name = "Winget"
+kind = "external"
+entry = "winget-plus.ps1"
+priority = 80
+triggers = ["/wg"]

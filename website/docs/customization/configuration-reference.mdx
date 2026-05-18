@@ -1,0 +1,109 @@
+---
+title: Configuration Reference
+description: Main settings in config.rasi and what they affect.
+sidebar_position: 6
+---
+
+# Configuration Reference
+
+Main file:
+
+```text
+%AppData%\Invoke\config.rasi
+```
+
+## Launcher and mode selection
+
+- `modes`
+- `default-mode`
+- `combi-modes`
+- `display-<mode>`
+- `mode-<mode>-hotkey`
+
+## Search behavior
+
+- `matching`
+- `sorting-method`
+- `case-sensitive`
+- `search-delay`
+- `loading-delay`
+- `auto-select`
+- `show-start-page`
+- `close-after-action`
+- `clear-query-on-hide`
+- `close-on-focus-loss`
+
+## Layout
+
+- `theme`
+- `font`
+- `location`
+- `xoffset`
+- `yoffset`
+- `lines`
+- `columns`
+- `sidebar-mode`
+- `show-icons`
+- `cycle`
+
+## Everything integration
+
+- `everything-cli-path`
+- `everything-path`
+
+## Result templating
+
+Per-mode title and subtitle formatting:
+
+- `result-title-<mode>`
+- `result-subtitle-<mode>`
+
+Useful placeholders include fields like display text, secondary text, metadata, icon, kind, and mode id.
+
+## Example
+
+```rasi
+configuration {
+  modes: "apps,run,files,windows,combi,cliphist";
+  default-mode: "cliphist";
+  combi-modes: "apps,files,cliphist";
+  theme: "oxide";
+  launcher-hotkey: "Ctrl+Space";
+  matching: "normal";
+  sorting-method: "fzf";
+  case-sensitive: true;
+  cycle: false;
+  sidebar-mode: false;
+  show-icons: false;
+  font: "JetBrains Mono 14";
+  location: "south";
+  xoffset: 24;
+  yoffset: -12;
+  lines: 12;
+  columns: 2;
+  search-delay: 55;
+  loading-delay: 1500;
+  close-on-focus-loss: false;
+  close-after-action: false;
+  clear-query-on-hide: false;
+  auto-select: false;
+  show-start-page: false;
+  everything-cli-path: "C:/tools/Everything/es.exe";
+  everything-path: "C:/tools/Everything/Everything.exe";
+  display-drun: "Apps";
+  display-files: "Files";
+  display-window: "Windows";
+  mode-window-hotkey: "Alt+2";
+  kb-mode-next: "Control+j";
+}
+```
+
+## Compatibility aliases
+
+Config loader normalizes:
+
+- `apps` -> `drun`
+- `windows` -> `window`
+- `file` -> `files`
+
+Useful when porting habits from other launchers.

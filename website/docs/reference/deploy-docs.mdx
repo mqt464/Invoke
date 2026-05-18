@@ -1,0 +1,55 @@
+---
+title: Deploy Docs To GitHub Pages
+description: Build and publish the Docusaurus docs site for this repo.
+sidebar_position: 11
+---
+
+# Deploy Docs To GitHub Pages
+
+This repo now includes Docusaurus site in `website\`.
+
+## Local docs dev
+
+```powershell
+cd .\website
+npm start
+```
+
+Build static output:
+
+```powershell
+npm run build
+```
+
+## How config resolves site URL
+
+Site config uses env vars so it can work on GitHub Pages without hardcoding your username:
+
+- `GITHUB_OWNER`
+- `GITHUB_REPOSITORY`
+- optional `DOCUSAURUS_URL`
+
+If repo is project site, base URL becomes `/<repo>/`.
+
+If repo name equals `<owner>.github.io`, base URL becomes `/`.
+
+## Workflow
+
+Use GitHub Pages workflow in:
+
+```text
+.github/workflows/deploy-docs.yml
+```
+
+Push to default branch, let workflow build `website`, then publish static output from `website/build`.
+
+## First-time GitHub setup
+
+1. Enable GitHub Actions for repo.
+2. In Pages settings, set source to GitHub Actions.
+3. Push default branch.
+4. Wait for deploy workflow.
+
+## Optional custom domain
+
+If you later use custom domain, set `DOCUSAURUS_URL` in workflow or repository variables so canonical URLs stay correct.

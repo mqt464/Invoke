@@ -1,0 +1,8 @@
+id = "cliphist"
+name = "Cliphist"
+kind = "external"
+entry = "cliphist.ps1"
+priority = 90
+triggers = ["/clip"]
+background_entry = "watch.ps1"
+background_restart_on_exit = true

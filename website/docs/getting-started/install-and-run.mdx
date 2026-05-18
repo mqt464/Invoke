@@ -1,0 +1,77 @@
+---
+title: Install And Run
+description: Build Invoke locally and launch it on Windows.
+sidebar_position: 2
+---
+
+# Install And Run
+
+## Requirements
+
+- Windows 11 recommended
+- `.NET 10` SDK
+- `winget` only if your own scripts use it
+- `Everything` plus `es.exe` for `files` mode
+
+## Build from source
+
+```powershell
+dotnet build .\Invoke.sln
+dotnet run --project .\src\Invoke.App\Invoke.App.csproj
+```
+
+If your `dotnet` on `PATH` is runtime-only, use repo-local SDK:
+
+```powershell
+.\.dotnet\dotnet.exe build .\Invoke.sln
+```
+
+Shortcut:
+
+```powershell
+.\dev.ps1
+```
+
+## First launch
+
+On first run, Invoke seeds config under `%AppData%\Invoke` unless portable mode enabled.
+
+Generated files:
+
+```text
+%AppData%\Invoke\
+  config.rasi
+  themes\default.rasi
+  scripts\
+  scripts\order.txt
+```
+
+If `INVOKE_PORTABLE=1`, config goes beside app in `config\`.
+
+## Open launcher
+
+If `launcher-hotkey` configured, Invoke listens for that global hotkey. Older seed configs used `Alt+Space`, but current seeded config leaves launcher hotkey unset unless you add one yourself.
+
+You can also open it from tray icon.
+
+## Everything integration
+
+`files` mode looks for `es.exe` in this order:
+
+1. `everything-cli-path`
+2. next to configured `everything-path`
+3. bundled copy near app
+4. `tools\Everything`
+5. `PATH`
+
+If `es.exe` reports Everything IPC unavailable, Invoke tries to start `Everything.exe` automatically and retries search.
+
+## Portable note
+
+For portable builds, set:
+
+```powershell
+$env:INVOKE_PORTABLE='1'
+```
+
+That keeps config local to executable directory instead of `%AppData%`.

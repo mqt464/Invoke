@@ -1,0 +1,50 @@
+---
+title: First Configuration
+description: Minimal config to get modes, theme, hotkey, and file search working.
+sidebar_position: 3
+---
+
+# First Configuration
+
+Minimal starter:
+
+```rasi
+configuration {
+  modes: "drun,run,files,window,combi";
+  default-mode: "drun";
+  combi-modes: "drun,run,files,window";
+  theme: "default";
+  launcher-hotkey: "Alt+Space";
+  everything-cli-path: "C:/Tools/Everything/es.exe";
+  everything-path: "C:/Tools/Everything/Everything.exe";
+  mode-window-hotkey: "Alt+1";
+  mode-run-hotkey: "Alt+2";
+  kb-mode-next: "Alt+Right";
+  kb-mode-previous: "Alt+Left";
+  lines: 8;
+  columns: 1;
+  cycle: true;
+}
+```
+
+## Settings most people change first
+
+- `launcher-hotkey`
+- `theme`
+- `modes`
+- `default-mode`
+- `combi-modes`
+- `everything-cli-path`
+- `everything-path`
+- `mode-*-hotkey`
+- `lines`
+- `show-icons`
+
+## Good first workflow
+
+1. Set launcher hotkey.
+2. Verify `drun` and `run` feel right.
+3. Point `files` mode at Everything.
+4. Add per-mode hotkeys.
+5. Add one custom script mode.
+6. Tweak theme after behavior feels right.

@@ -1,0 +1,141 @@
+---
+title: Rich Scripts
+description: Add custom modes and actions with script.toml plus PowerShell, batch, or executables.
+sidebar_position: 8
+---
+
+# Rich Scripts
+
+Rich scripts live under:
+
+```text
+%AppData%\Invoke\scripts\
+```
+
+Each script gets its own folder.
+
+## Minimal layout
+
+```text
+%AppData%\Invoke\scripts\echo\
+  script.toml
+  echo.ps1
+```
+
+## Minimal manifest
+
+```toml
+id = "echo"
+name = "Echo"
+kind = "external"
+entry = "echo.ps1"
+priority = 70
+triggers = ["/echo"]
+```
+
+## Useful manifest fields
+
+- `id`
+- `name`
+- `entry`
+- `arguments`
+- `priority`
+- `triggers`
+- `trigger_mode`
+- `keep_alive`
+- `run_for_query`
+- `background_entry`
+- `background_arguments`
+- `background_restart_on_exit`
+
+## Trigger styles
+
+### Standard
+
+Runs on exact trigger or trigger plus space:
+
+```toml
+triggers = ["/note"]
+```
+
+Matches:
+
+- `/note`
+- `/note hello`
+
+### Prefix token
+
+Lets script own whole token prefix family:
+
+```toml
+triggers = ["!"]
+trigger_mode = "prefix-token"
+```
+
+Matches:
+
+- `!yt synthwave`
+- `!gh docusaurus`
+- `!docs invoke`
+
+Script receives full trigger token and remaining terms separately.
+
+## Output contract
+
+Script can return object with `results` array or return array directly.
+
+Example:
+
+```json
+{
+  "displayPrefix": "Docs | ",
+  "rawPrefix": "/docs ",
+  "message": "Search project docs",
+  "results": [
+    {
+      "id": "overview",
+      "title": "Open overview",
+      "subtitle": "Project documentation",
+      "kind": "Web",
+      "icon": "favicon:https://example.com",
+      "action": {
+        "kind": "open-url",
+        "url": "https://example.com/docs"
+      }
+    }
+  ]
+}
+```
+
+## Supported action kinds
+
+- `execute`
+- `open-url`
+- `open-path`
+- `copy-text`
+- `set-query`
+
+## Persistent sessions
+
+If `keep_alive = true`, Invoke starts script once and sends JSON requests line by line over stdin/stdout. Good for:
+
+- cached indexes
+- expensive APIs
+- clipboard history
+- local stateful tools
+
+## Background helpers
+
+Scripts can also start companion background process on app startup:
+
+```toml
+background_entry = "watch-notes.ps1"
+background_arguments = "--watch"
+background_restart_on_exit = true
+```
+
+Good for:
+
+- watching files
+- prebuilding indexes
+- syncing local state

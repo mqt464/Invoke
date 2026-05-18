@@ -1,0 +1,504 @@
+<Window x:Class="Invoke.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Invoke.App.Controls"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Background="Transparent"
+        AllowsTransparency="True"
+        UseLayoutRounding="True"
+        Deactivated="OnDeactivated"
+        PreviewKeyDown="OnPreviewKeyDown"
+        KeyDown="OnKeyDown">
+    <Window.Resources>
+        <Style x:Key="LauncherTextBoxStyle" TargetType="{x:Type controls:SmoothCaretTextBox}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="{DynamicResource LauncherSearchPadding}"/>
+            <Setter Property="FontFamily" Value="{DynamicResource LauncherSearchFontFamily}"/>
+            <Setter Property="FontSize" Value="{DynamicResource LauncherSearchFontSize}"/>
+            <Setter Property="FontWeight" Value="{DynamicResource LauncherSearchFontWeight}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="CaretBrush" Value="Transparent"/>
+            <Setter Property="CaretWidth" Value="{DynamicResource LauncherCaretWidth}"/>
+            <Setter Property="CaretCornerRadius" Value="{DynamicResource LauncherCaretCornerRadius}"/>
+            <Setter Property="CaretMinHeight" Value="{DynamicResource LauncherCaretMinHeight}"/>
+            <Setter Property="CaretAnimationDurationMilliseconds" Value="{DynamicResource LauncherCaretAnimationDurationMilliseconds}"/>
+            <Setter Property="CaretBlinkMilliseconds" Value="{DynamicResource LauncherCaretBlinkMilliseconds}"/>
+            <Setter Property="CaretTypingBlinkPauseMilliseconds" Value="{DynamicResource LauncherCaretTypingBlinkPauseMilliseconds}"/>
+            <Setter Property="CaretAnimationEasing" Value="{DynamicResource LauncherCaretAnimationEasing}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:SmoothCaretTextBox}">
+                        <Grid ClipToBounds="True">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                            <Rectangle x:Name="PART_SmoothCaret"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       Fill="{DynamicResource LauncherAccentBrush}"
+                                       Visibility="Collapsed">
+                                <Rectangle.RenderTransform>
+                                    <TranslateTransform/>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LauncherListBoxStyle" TargetType="ListBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+
+        <Style x:Key="LauncherScrollBarThumbStyle" TargetType="Thumb">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border x:Name="ThumbChrome"
+                                Background="{DynamicResource LauncherScrollBarThumbBrush}"
+                                BorderBrush="{DynamicResource LauncherScrollBarThumbBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{DynamicResource LauncherScrollBarCornerRadius}"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ThumbChrome" Property="Background" Value="{DynamicResource LauncherScrollBarThumbHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="ThumbChrome" Property="Background" Value="{DynamicResource LauncherScrollBarThumbPressedBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="{DynamicResource LauncherScrollBarWidth}"/>
+            <Setter Property="Margin" Value="{DynamicResource LauncherScrollBarMargin}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid x:Name="Root">
+                            <Border x:Name="TrackChrome"
+                                    Background="{DynamicResource LauncherScrollBarTrackBrush}"
+                                    BorderBrush="{DynamicResource LauncherScrollBarTrackBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="{DynamicResource LauncherScrollBarCornerRadius}"/>
+                            <Track x:Name="PART_Track"
+                                   IsDirectionReversed="True">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageUpCommand"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Focusable="False"
+                                                  IsTabStop="False"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource LauncherScrollBarThumbStyle}"
+                                           MinHeight="{DynamicResource LauncherScrollBarThumbMinHeight}"/>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageDownCommand"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Focusable="False"
+                                                  IsTabStop="False"/>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="Root" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="90"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LauncherListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="MinHeight" Value="{DynamicResource LauncherRowHeight}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="{Binding RowMargin}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="{DynamicResource LauncherForegroundBrush}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <EventSetter Event="Loaded" Handler="OnResultListItemLoaded"/>
+            <EventSetter Event="PreviewMouseDown" Handler="OnResultListItemPreviewMouseDown"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid>
+                            <Border x:Name="SelectionAccent"
+                                    Width="{DynamicResource LauncherSelectionAccentWidth}"
+                                    HorizontalAlignment="Left"
+                                    Margin="{DynamicResource LauncherSelectionAccentMargin}"
+                                    Background="{DynamicResource LauncherAccentBrush}"
+                                    CornerRadius="2"
+                                    Visibility="{DynamicResource LauncherSelectionAccentVisibility}"
+                                    Opacity="0"/>
+                            <Border x:Name="ItemChrome"
+                                    Padding="{DynamicResource LauncherResultItemPadding}"
+                                    Background="{Binding RowBackground}"
+                                    BorderBrush="{Binding RowBorder}"
+                                    BorderThickness="{DynamicResource LauncherItemBorderThickness}"
+                                    Opacity="{Binding RowOpacity}">
+                                <ContentPresenter/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemChrome" Property="Background" Value="{DynamicResource LauncherSelectedBrush}"/>
+                                <Setter TargetName="ItemChrome" Property="BorderBrush" Value="{DynamicResource LauncherSelectedBorderBrush}"/>
+                                <Setter TargetName="SelectionAccent" Property="Opacity" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="Root"
+            BorderThickness="0"
+            Padding="0"
+            Background="Transparent"
+            CornerRadius="{DynamicResource LauncherSurfaceCornerRadius}"
+            SnapsToDevicePixels="True">
+        <Grid x:Name="SurfaceHost" Opacity="1">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="SurfaceScaleTransform" ScaleX="1" ScaleY="1"/>
+                    <TranslateTransform x:Name="SurfaceTranslateTransform" X="0" Y="0"/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Border x:Name="SurfaceChrome"
+                    Background="{DynamicResource LauncherSearchBackgroundBrush}"
+                    BorderBrush="{DynamicResource LauncherSearchBorderBrush}"
+                    BorderThickness="{DynamicResource LauncherSurfaceBorderThickness}"
+                    CornerRadius="{DynamicResource LauncherSurfaceCornerRadius}"
+                    Padding="{DynamicResource LauncherSurfacePadding}"
+                    ClipToBounds="True"
+                    SnapsToDevicePixels="True">
+                <Grid x:Name="MainboxGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Image x:Name="SurfaceBackgroundImage"
+                           Grid.RowSpan="4"
+                           Visibility="Collapsed"
+                           Opacity="0"
+                           Stretch="UniformToFill"/>
+                    <Border x:Name="ModeSwitcherChrome"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource LauncherSeparatorBrush}"
+                            BorderThickness="0,0,0,1"
+                            Visibility="Collapsed">
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <StackPanel x:Name="ModeSwitcherPanel"
+                                        Orientation="Horizontal"
+                                        Margin="10,8,10,8"/>
+                        </ScrollViewer>
+                    </Border>
+                    <Border x:Name="SearchChrome"
+                            Grid.Row="1"
+                            Padding="{DynamicResource LauncherInputbarPadding}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            CornerRadius="{DynamicResource LauncherSearchCornerRadius}">
+                        <Grid x:Name="InputbarGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="PromptText"
+                                       Grid.Column="0"
+                                       Text="Search"
+                                       Margin="{DynamicResource LauncherPromptMargin}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource LauncherPromptBrush}"
+                                       FontFamily="{DynamicResource LauncherPromptFontFamily}"
+                                       FontSize="{DynamicResource LauncherSearchFontSize}"
+                                       FontWeight="{DynamicResource LauncherPromptFontWeight}"
+                                       IsHitTestVisible="False"/>
+                            <Grid x:Name="EntryHost"
+                                  Grid.Column="1"
+                                  Margin="{DynamicResource LauncherEntryHostMargin}">
+                                <TextBlock x:Name="QueryDisplayText"
+                                           Margin="{DynamicResource LauncherSearchTextMargin}"
+                                           VerticalAlignment="Center"
+                                           FontFamily="{DynamicResource LauncherSearchFontFamily}"
+                                           FontSize="{DynamicResource LauncherSearchFontSize}"
+                                           FontWeight="{DynamicResource LauncherSearchFontWeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           IsHitTestVisible="False"/>
+                                <controls:SmoothCaretTextBox x:Name="QueryBox"
+                                                             Style="{StaticResource LauncherTextBoxStyle}"
+                                                             TextChanged="OnQueryTextChanged"
+                                                             PreviewKeyDown="OnQueryBoxKeyDown"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock x:Name="ModeMessageText"
+                               Grid.Row="2"
+                               Margin="20,0,20,8"
+                               Foreground="{DynamicResource LauncherMutedBrush}"
+                               FontFamily="{DynamicResource LauncherMessageFontFamily}"
+                               FontSize="{DynamicResource LauncherMessageFontSize}"
+                               FontWeight="{DynamicResource LauncherMessageFontWeight}"
+                               Visibility="Collapsed"
+                               TextWrapping="Wrap"/>
+
+                    <Border x:Name="ResultsChrome"
+                            Grid.Row="3"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource LauncherSeparatorBrush}"
+                            BorderThickness="{DynamicResource LauncherSeparatorThickness}"
+                            CornerRadius="{DynamicResource LauncherResultsCornerRadius}">
+                        <Grid x:Name="ResultsHost">
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="ResultsHostTranslateTransform" X="0" Y="0"/>
+                            </Grid.RenderTransform>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ProgressBar x:Name="LoadingBar"
+                                         Height="{DynamicResource LauncherLoadingIndicatorHeight}"
+                                         IsIndeterminate="True"
+                                         Foreground="{DynamicResource LauncherAccentBrush}"
+                                         Background="Transparent"
+                                         Visibility="Collapsed"/>
+                            <Grid x:Name="ResultsContentHost"
+                                  Grid.Row="1">
+                                <ListBox x:Name="ResultsList"
+                                         Style="{StaticResource LauncherListBoxStyle}"
+                                         ItemContainerStyle="{StaticResource LauncherListBoxItemStyle}"
+                                         VirtualizingPanel.IsVirtualizing="True"
+                                         VirtualizingPanel.VirtualizationMode="Recycling"
+                                         ScrollViewer.CanContentScroll="True"
+                                         SelectionMode="Single"
+                                         Loaded="OnResultsListLoaded"
+                                         SizeChanged="OnResultsListSizeChanged"
+                                         SelectionChanged="OnResultsSelectionChanged"
+                                         MouseDoubleClick="OnResultDoubleClick"
+                                         Visibility="Collapsed">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{DynamicResource LauncherIconColumnWidth}"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Width="{DynamicResource LauncherIconContainerSize}"
+                                                      Height="{DynamicResource LauncherIconContainerSize}"
+                                                      Visibility="{DynamicResource LauncherIconSlotVisibility}"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Center">
+                                                    <Border BorderThickness="{DynamicResource LauncherIconBorderThickness}"
+                                                            CornerRadius="{DynamicResource LauncherIconCornerRadius}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="{Binding IconBackground}"/>
+                                                                <Setter Property="BorderBrush" Value="{Binding IconBorder}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                                                        <Setter Property="Background" Value="{DynamicResource LauncherSelectedBrush}"/>
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource LauncherSelectedBorderBrush}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <Grid>
+                                                            <Image Source="{Binding IconImage}"
+                                                                   Width="{DynamicResource LauncherIconSize}"
+                                                                   Height="{DynamicResource LauncherIconSize}"
+                                                                   Visibility="{Binding IconVisibility}"
+                                                                   Opacity="{DynamicResource LauncherIconOpacity}"
+                                                                   SnapsToDevicePixels="True"/>
+                                                            <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                                <Image Source="{Binding FallbackIconImage}"
+                                                                       Width="{DynamicResource LauncherFallbackIconSize}"
+                                                                       Height="{DynamicResource LauncherFallbackIconSize}"
+                                                                       Opacity="{DynamicResource LauncherFallbackIconOpacity}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       RenderOptions.BitmapScalingMode="LowQuality"/>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Border>
+                                                </Grid>
+                                                <StackPanel Grid.Column="1"
+                                                            Margin="{DynamicResource LauncherResultTextMargin}"
+                                                            VerticalAlignment="Center"
+                                                            Visibility="{Binding TwoLineVisibility}">
+                                                    <TextBlock Tag="title"
+                                                               FontFamily="{DynamicResource LauncherResultTitleFontFamily}"
+                                                               FontWeight="{DynamicResource LauncherResultTitleFontWeight}"
+                                                               FontSize="{DynamicResource LauncherResultTitleFontSize}"
+                                                               Loaded="OnResultTextLoaded"
+                                                               DataContextChanged="OnResultTextDataContextChanged"
+                                                               TextTrimming="CharacterEllipsis">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="{Binding TitleForeground}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource LauncherSelectedTextBrush}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    <TextBlock Tag="subtitle"
+                                                               FontFamily="{DynamicResource LauncherResultSubtitleFontFamily}"
+                                                               FontWeight="{DynamicResource LauncherResultSubtitleFontWeight}"
+                                                               FontSize="{DynamicResource LauncherResultSubtitleFontSize}"
+                                                               Visibility="{DynamicResource LauncherSubtitleVisibility}"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Loaded="OnResultTextLoaded"
+                                                               DataContextChanged="OnResultTextDataContextChanged"
+                                                               Margin="{DynamicResource LauncherResultSubtitleMargin}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="{Binding SubtitleForeground}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource LauncherSelectedSecondaryBrush}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1"
+                                                           Tag="title"
+                                                           Margin="{DynamicResource LauncherResultTextMargin}"
+                                                           VerticalAlignment="Center"
+                                                           Visibility="{Binding OneLineVisibility}"
+                                                           FontFamily="{DynamicResource LauncherResultTitleFontFamily}"
+                                                           FontWeight="{DynamicResource LauncherResultTitleFontWeight}"
+                                                           FontSize="{DynamicResource LauncherResultTitleFontSize}"
+                                                           Loaded="OnResultTextLoaded"
+                                                           DataContextChanged="OnResultTextDataContextChanged"
+                                                           TextTrimming="CharacterEllipsis">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{Binding TitleForeground}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource LauncherSelectedTextBrush}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Border x:Name="OverflowTopBadge"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Margin="{DynamicResource LauncherOverflowTopMargin}"
+                                        Padding="{DynamicResource LauncherOverflowBadgePadding}"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="0"
+                                        CornerRadius="{DynamicResource LauncherOverflowBadgeCornerRadius}"
+                                        Visibility="Collapsed"
+                                        IsHitTestVisible="False">
+                                    <TextBlock x:Name="OverflowTopText"
+                                               Opacity="0.58"
+                                               Foreground="{DynamicResource LauncherOverflowBadgeTextBrush}"
+                                               FontFamily="{DynamicResource LauncherOverflowBadgeFontFamily}"
+                                               FontSize="{DynamicResource LauncherOverflowBadgeFontSize}"
+                                               FontWeight="{DynamicResource LauncherOverflowBadgeFontWeight}"/>
+                                </Border>
+                                <Border x:Name="OverflowBottomBadge"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Margin="{DynamicResource LauncherOverflowBottomMargin}"
+                                        Padding="{DynamicResource LauncherOverflowBadgePadding}"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="0"
+                                        CornerRadius="{DynamicResource LauncherOverflowBadgeCornerRadius}"
+                                        Visibility="Collapsed"
+                                        IsHitTestVisible="False">
+                                    <TextBlock x:Name="OverflowBottomText"
+                                               Opacity="0.58"
+                                               Foreground="{DynamicResource LauncherOverflowBadgeTextBrush}"
+                                               FontFamily="{DynamicResource LauncherOverflowBadgeFontFamily}"
+                                               FontSize="{DynamicResource LauncherOverflowBadgeFontSize}"
+                                               FontWeight="{DynamicResource LauncherOverflowBadgeFontWeight}"/>
+                                </Border>
+                                <StackPanel x:Name="StatusPanel"
+                                            VerticalAlignment="Center"
+                                            Margin="{DynamicResource LauncherStatusPanelPadding}">
+                                    <TextBlock x:Name="StatusTitleText"
+                                               Text="Start typing"
+                                               FontFamily="{DynamicResource LauncherStatusFontFamily}"
+                                               FontSize="{DynamicResource LauncherStatusTitleFontSize}"
+                                               FontWeight="{DynamicResource LauncherStatusTitleFontWeight}"
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"/>
+                                    <TextBlock x:Name="StatusBodyText"
+                                               Margin="{DynamicResource LauncherStatusBodyMargin}"
+                                               Foreground="{DynamicResource LauncherMutedBrush}"
+                                               FontFamily="{DynamicResource LauncherStatusFontFamily}"
+                                               FontSize="{DynamicResource LauncherStatusFontSize}"
+                                               FontWeight="{DynamicResource LauncherStatusFontWeight}"
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="StatusHintText"
+                                               Margin="{DynamicResource LauncherStatusHintMargin}"
+                                               Foreground="{DynamicResource LauncherMutedBrush}"
+                                               FontFamily="{DynamicResource LauncherStatusFontFamily}"
+                                               FontSize="{DynamicResource LauncherStatusFontSize}"
+                                               FontWeight="{DynamicResource LauncherStatusFontWeight}"
+                                               Opacity="{DynamicResource LauncherStatusHintOpacity}"
+                                               HorizontalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

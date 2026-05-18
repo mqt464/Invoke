@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Assets\Icons\app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Invoke.Core\Invoke.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\*.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\tools\Everything\Everything.exe" Link="Everything.exe" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\tools\Everything\Everything.exe')" />
+    <None Include="..\..\tools\Everything\es.exe" Link="es.exe" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\tools\Everything\es.exe')" />
+    <None Include="..\..\tools\Everything\License.txt" Link="THIRD-PARTY-NOTICES\Everything-License.txt" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\tools\Everything\License.txt')" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,68 @@
+.features {
+  padding: 2rem 0 4rem;
+}
+
+.sectionLead {
+  max-width: 46rem;
+  margin-bottom: 1.6rem;
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  color: var(--invoke-text-soft);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heading {
+  margin-bottom: 0.7rem;
+  font-size: clamp(1.8rem, 2.5vw, 2.7rem);
+}
+
+.copy {
+  color: var(--invoke-text-soft);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  min-height: 220px;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.2rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+    rgba(10, 10, 12, 0.88);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.cardIndex {
+  margin-bottom: 1.1rem;
+  color: #8ea6d4;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.82rem;
+}
+
+.cardTitle {
+  margin-bottom: 0.55rem;
+  font-size: 1.15rem;
+}
+
+.cardBody {
+  color: var(--invoke-text-soft);
+  margin: 0;
+}
+
+@media (max-width: 996px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,141 @@
+---
+title: Themes
+description: Style Invoke with rofi-inspired .rasi theme files.
+sidebar_position: 7
+---
+
+# Themes
+
+Themes live in:
+
+```text
+%AppData%\Invoke\themes\
+```
+
+File format: `.rasi`
+
+## What theme system supports
+
+Invoke maps rofi-style widget sections into WPF visuals. Important blocks:
+
+- `window`
+- `mainbox`
+- `inputbar`
+- `prompt`
+- `entry`
+- `listview`
+- `element`
+- `element selected`
+- `element-text`
+- `element-icon`
+- `message`
+- `mode-switcher`
+- `overflow-indicator`
+
+## Seed theme direction
+
+Default theme ships with:
+
+- dark background
+- mono typography
+- compact result rows
+- subtle animations
+- low-chrome selection style
+
+## Example theme
+
+```rasi
+* {
+  background-color: #101820;
+  text-color: #F8F8F2;
+  accent-color: #FF9900;
+}
+
+window {
+  width: 900px;
+  border-color: #223344;
+  border-radius: 16px;
+}
+
+inputbar {
+  padding: [11, 22];
+  background-color: #0F141B;
+  border-color: #334455;
+  border: 2px;
+  border-radius: 12px;
+  orientation: vertical;
+  spacing: 9;
+  children: [entry,prompt];
+}
+
+prompt {
+  enabled: false;
+  text: "Run";
+  text-color: #8899AA;
+}
+
+listview {
+  spacing: 6;
+}
+
+element {
+  padding: [7, 15];
+  height: 48px;
+  border-radius: 10px;
+}
+
+element selected {
+  background-color: #1C2733;
+  border-color: #44CC88;
+}
+
+element-icon {
+  size: 28px;
+}
+
+message {
+  enabled: false;
+  text: "Help text";
+  text-color: #778899;
+}
+
+mode-switcher {
+  enabled: false;
+  show-icons: false;
+  orientation: vertical;
+  spacing: 12;
+}
+```
+
+## Special helpers
+
+Theme loader supports:
+
+- `inherit`
+- `env(NAME)`
+- `var(name, fallback)`
+
+Example:
+
+```rasi
+* {
+  accent-color: env(INVOKE_THEME_ACCENT);
+  text-color: #EEEEEE;
+}
+
+prompt {
+  text-color: inherit;
+}
+
+message {
+  text-color: var(accent-color, #999999);
+}
+```
+
+## Practical advice
+
+- start from `default.rasi`
+- change spacing before colors
+- keep result height, icon size, and font size in sync
+- use `element selected` for strongest contrast
+- enable subtitles only when result source really needs two lines

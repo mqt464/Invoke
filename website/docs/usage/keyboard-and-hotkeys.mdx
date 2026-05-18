@@ -1,0 +1,78 @@
+---
+title: Keyboard And Hotkeys
+description: Global launcher hotkey, per-mode hotkeys, and keybinding surface.
+sidebar_position: 5
+---
+
+# Keyboard And Hotkeys
+
+## Global launcher hotkey
+
+Set launcher toggle with:
+
+```rasi
+configuration {
+  launcher-hotkey: "Alt+Space";
+}
+```
+
+If unset, Invoke still runs and tray menu still works, but no global summon key.
+
+## Per-mode hotkeys
+
+You can jump straight into specific mode:
+
+```rasi
+configuration {
+  mode-window-hotkey: "Alt+1";
+  mode-run-hotkey: "Alt+2";
+  mode-files-hotkey: "Alt+3";
+}
+```
+
+## Default active keys
+
+Current seed config keeps only minimal key set by default:
+
+- `kb-accept-entry`
+- `kb-cancel`
+- `kb-row-up`
+- `kb-row-down`
+
+Other keybindings only activate when you define them.
+
+## Common optional bindings
+
+- `kb-mode-next`
+- `kb-mode-previous`
+- `kb-row-left`
+- `kb-row-right`
+- `kb-move-front`
+- `kb-move-end`
+- `kb-remove-char-back`
+- `kb-remove-char-forward`
+- `kb-clear-line`
+- `kb-toggle-case-sensitivity`
+
+Example:
+
+```rasi
+configuration {
+  kb-mode-next: "Alt+Right";
+  kb-mode-previous: "Alt+Left";
+  kb-move-front: "Control+a";
+  kb-move-end: "Control+e";
+}
+```
+
+## Tray controls
+
+Tray menu can:
+
+- open launcher
+- disable or enable global hotkey
+- toggle Start With Windows
+- open config folder
+- open script order file
+- reload config
+- exit app
