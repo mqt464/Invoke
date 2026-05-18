@@ -20,8 +20,8 @@
   --ifm-font-family-base: 'Space Grotesk', 'Segoe UI', sans-serif;
   --ifm-font-family-monospace: 'IBM Plex Mono', 'Cascadia Mono', monospace;
   --ifm-heading-font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-  --ifm-global-radius: 16px;
-  --ifm-card-border-radius: 18px;
+  --ifm-global-radius: 3px;
+  --ifm-card-border-radius: 4px;
   --ifm-menu-color: #ced5e4;
   --ifm-menu-color-active: #ffffff;
   --ifm-menu-color-background-active: rgba(184, 205, 244, 0.12);
@@ -34,6 +34,9 @@
   --ifm-blockquote-border-left-color: #b8cdf4;
   --docusaurus-highlighted-code-line-bg: rgba(184, 205, 244, 0.08);
   --invoke-text-soft: #9ca6ba;
+  --invoke-border: rgba(255, 255, 255, 0.08);
+  --invoke-surface: #080a0d;
+  --invoke-surface-2: #0d1015;
 }
 
 html[data-theme='dark'] {
@@ -46,15 +49,11 @@ html[data-theme='dark'] {
 
 html,
 body {
-  background:
-    radial-gradient(circle at top left, rgba(119, 136, 175, 0.12), transparent 22%),
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.04), transparent 18%),
-    #030405;
+  background: #030405;
 }
 
 .navbar {
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--invoke-border);
 }
 
 .navbar__title {
@@ -85,31 +84,68 @@ h3 {
 
 .theme-doc-sidebar-menu .menu__link,
 .table-of-contents__link {
-  border-radius: 12px;
+  border-radius: 3px;
 }
 
 .footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--invoke-border);
 }
 
 .button.button--primary {
   color: #0a0d14;
-  border: 0;
-  box-shadow: 0 12px 32px rgba(184, 205, 244, 0.18);
+  border: 1px solid #b8cdf4;
+  border-radius: 3px;
+  box-shadow: none;
 }
 
 .button.button--secondary {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--invoke-border);
   color: var(--ifm-font-color-base);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--invoke-surface);
+  border-radius: 3px;
 }
 
 .markdown blockquote {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 0 14px 14px 0;
-  padding: 0.9rem 1rem;
+  background: var(--invoke-surface);
+  border-radius: 0 3px 3px 0;
+  padding: 0.8rem 0.95rem;
 }
 
 .markdown table {
   display: table;
+}
+
+.theme-doc-markdown pre,
+.theme-doc-markdown table,
+.pagination-nav__link,
+.card,
+.theme-admonition {
+  border-radius: 4px;
+}
+
+.theme-doc-markdown pre,
+.theme-admonition,
+.pagination-nav__link {
+  border: 1px solid var(--invoke-border);
+  box-shadow: none;
+  background: var(--invoke-surface);
+}
+
+.theme-doc-footer {
+  margin-top: 3rem;
+}
+
+@media (max-width: 996px) {
+  .theme-doc-markdown {
+    font-size: 0.98rem;
+  }
+
+  .navbar__inner {
+    padding-inline: 0.25rem;
+  }
+
+  .button.button--lg {
+    padding: 0.7rem 0.95rem;
+    font-size: 0.95rem;
+  }
 }

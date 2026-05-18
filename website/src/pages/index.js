@@ -15,7 +15,6 @@ function HomepageHeader() {
 
   return (
     <header className={clsx('hero', styles.heroBanner)}>
-      <div className={styles.heroBackdrop} />
       <div className="container">
         <div className={styles.heroShell}>
           <div className={styles.heroCopy}>
